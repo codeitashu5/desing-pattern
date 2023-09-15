@@ -72,5 +72,6 @@ func (ak Ak47) GetCurrentBullets() int {
 	return ak.bullets
 }
 
+// make new battalion and assign gun's to them
 type Battalion struct {
 }
