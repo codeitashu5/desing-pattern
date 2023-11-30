@@ -1,5 +1,7 @@
 package Creational_Patterns
 
+import "fmt"
+
 /*
    we can have different type of gun's that can be produced and those guns are feed into an war zone so that they can be used by the solders to fire
 */
@@ -72,5 +74,51 @@ func (ak Ak47) GetCurrentBullets() int {
 	return ak.bullets
 }
 
-type Battalion struct {
+type Battalion interface {
+	AssignGunToSoldier()
+}
+
+// we need to add factory mathords
+type BattalionStruct struct {
+	totalSoldiers int
+	Soldiers      []Soldier
+	Battalion
+}
+
+type Soldier struct {
+	height int
+	weight int
+	name   string
+	gun    IGun
+}
+
+func (s Soldier) FireBullet() {
+	s.gun.FireBullet()
+}
+
+type JKRiff struct {
+	BattalionStruct
+}
+
+func (ba JKRiff) AssignGunToSoldier() {
+	for i, _ := range ba.Soldiers {
+		ba.Soldiers[i].gun = Ak47{
+			bullets: 100,
+		}
+		ba.Soldiers[i].name = fmt.Sprintf("name-%d", i)
+		ba.Soldiers[i].height = i * 100
+		ba.Soldiers[i].weight = i * 50
+	}
+}
+
+func SendJKRiffOnWar() {
+	jkRiff := new(JKRiff)
+	jkRiff.Soldiers = []Soldier{}
+	jkRiff.totalSoldiers = 100
+	// create an batallion of 100
+	for i := 0; i < 100; i++ {
+		jkRiff.Soldiers = append(jkRiff.Soldiers, *new(Soldier))
+	}
+	jkRiff.AssignGunToSoldier()
+	jkRiff.Soldiers[0].FireBullet()
 }
